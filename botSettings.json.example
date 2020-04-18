@@ -1,0 +1,7 @@
+{
+    "clientID":"",
+    "clientSecret":"",
+    "token":"",
+    "frogsDir":"frogs/",
+    "spideysDir":"spideys/"
+}
