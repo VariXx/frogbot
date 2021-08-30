@@ -3,5 +3,6 @@
 *.gif
 *.webm
 *.mp4
+.vscode/
+node_modules/
 botSettings.json
-node_modules\
