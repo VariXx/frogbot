@@ -1,111 +1,24 @@
-const fs = require('fs');
 const botSettings = require('./botSettings.json');
 const Discord = require('discord.js');
 const client = new Discord.Client();
-
+const { loadImages } = require('./utils/loadImages');
 // https://discordapp.com/oauth2/authorize?client_id=697816077547339797&scope=bot&permissions=378944 
 
-let frogs = [];
-let spideys = [];
-let alexJones = [];
+var frogs = [];
+var spideys = [];
+var alexJones = [];
 
-function loadFrogs()
-{
-    frogs = [];
-    fs.readdir(botSettings.frogsDir, (error, files) => 
-    {
-        console.log('Loading frogs...');
-        if(error)
-        {
-            console.log(error);
-        }
-        files.forEach(file => 
-        {
-            if(file.includes('.jpg') || file.includes('.png') || file.includes('.gif'))
-            {
-                frogs.push(file);
-                // console.log(`Loaded frog ${file}.`);
-            }
-
-        });
-        console.log(`Loaded ${frogs.length} frogs.`);
-    });
-}
-
-function loadSpideys()
-{
-    spideys = [];
-    fs.readdir(botSettings.spideysDir, (error, files) => 
-    {
-        console.log('Loading spideys...');
-        if(error)
-        {
-            console.log(error);
-        }
-        files.forEach(file => 
-        {
-            if(file.includes('.jpg') || file.includes('.png') || file.includes('.gif'))
-            {
-                spideys.push(file);
-                // console.log(`Loaded spidey ${file}.`);
-            }
-
-        });
-        console.log(`Loaded ${spideys.length} spideys.`);
-    });
-}
-
-function loadAlexJones()
-{
-    alexJones = [];
-    fs.readdir(botSettings.alexJonesDir, (error, files) => 
-    {
-        console.log('Loading alexJones...');
-        if(error)
-        {
-            console.log(error);
-        }
-        files.forEach(file => 
-        {
-            if(file.includes('.jpg') || file.includes('.png') || file.includes('.gif') || file.includes('.webm') || file.includes('.mp4'))
-            {
-                alexJones.push(file);
-            }
-
-        });
-        console.log(`Loaded ${alexJones.length} alexJones.`);
-    });
+function reloadImages() {
+    frogs = loadImages(botSettings.frogsDir);
+    spideys = loadImages(botSettings.spideysDir);
+    alexJones = loadImages(botSettings.alexJonesDir);
 }
 
 client.once('ready', () => {
-    try
-    {
-        loadFrogs();
+    reloadImages();
+    if(botSettings !== undefined) {
+        client.user.setActivity(botSettings.activity, {type: 'PLAYING'});
     }
-    catch(error)
-    {
-        console.log('Loading frogs failed. Sad day.');
-        console.log(error);
-    }
-    try 
-    {
-        loadSpideys();
-    }
-    catch(error)
-    {
-        console.log('Loading spideys failed.');
-        console.log(error);
-    }
-    try 
-    {
-        loadAlexJones();
-    }
-    catch(error)
-    {
-        console.log('Loading alexjones failed. The gloablists won.');
-        console.log(error);
-    }    
-    client.user.setActivity('the globalists', {type: 'PLAYING'});
 	console.log(`${client.user.username} logged in.`);
 });
 
@@ -177,17 +90,8 @@ client.on('message', message => {
             if(message.author.id == message.channel.guild.ownerID)
             {
                 message.channel.send('Reloading images.');
-                try
-                {
-                    loadFrogs();
-                    loadSpideys();
-                    loadAlexJones();
-                    message.channel.send('Images reloaded.');
-                }
-                catch(error)
-                {
-                    console.log(error);
-                }
+                reloadImages();
+                message.channel.send('Images reloaded.');
             }
         }
     }
