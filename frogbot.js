@@ -22,13 +22,14 @@ client.once('ready', () => {
 	console.log(`${client.user.username} logged in.`);
 });
 
-client.on('message', message => {
-    if(message.author.bot){ return; }
-    checkmsg = message.content.toLowerCase();
-    if(checkmsg == '!frog' || checkmsg == '!pepe' || checkmsg == '!frog' || checkmsg == '!pepo')
-    {
-        if(frogs.length < 1)
-        {
+function processCommand(message) {
+    let checkMsg = message.content.toLowerCase();
+    if(checkMsg == '!frog' || checkMsg == '!pepe' || checkMsg == '!frog' || checkMsg == '!pepo'){
+        if(!botSettings.pepo) { 
+            console.log(`Frogs disabled.`);
+            return;
+        }        
+        if(frogs.length < 1){
             console.log('No frogs loaded.');
             return;
         }
@@ -43,10 +44,12 @@ client.on('message', message => {
             .then(console.log('Frog delivered'))
             .catch(console.error);
     }
-    if(checkmsg == '!spidey' || checkmsg == '!spiderman' || checkmsg == 'i need pictures of spiderman!')
-    {
-        if(spideys.length < 1)
-        {
+    if(checkMsg == '!spidey' || checkMsg == '!spiderman' || checkMsg == 'i need pictures of spiderman!') {
+        if(!botSettings.spidey) { 
+            console.log(`Spideys disabled.`);
+            return;
+        }
+        if(spideys.length < 1) {
             console.log('No spideys loaded.');
             return;
         }
@@ -61,10 +64,12 @@ client.on('message', message => {
             .then(console.log('Spidey delivered'))
             .catch(console.error);
     }
-    if(checkmsg == '!alexjones' || checkmsg == '!jones' || checkmsg == '!globalist')
-    {
-        if(alexJones.length < 1)
-        {
+    if(checkMsg == '!alexjones' || checkMsg == '!jones' || checkMsg == '!globalist') {
+        if(!botSettings.jones) { 
+            console.log(`Alex Jones disabled.`);
+            return;
+        }        
+        if(alexJones.length < 1){
             console.log('No alexJones loaded.');
             return;
         }
@@ -79,22 +84,35 @@ client.on('message', message => {
             .then(console.log('Alex Jones delivered'))
             .catch(console.error);
     }
-    if(checkmsg == '!froghelp' || checkmsg == '!help')
-    {
+    if(checkMsg == '!froghelp' || checkMsg == '!help') {
         message.channel.send(`!frog sends a frog. !spidey sends a spidey. !froghelp displays this message`);
     }
-    if(checkmsg == '!reloadimages')
-    {
-        if(message.channel.guild.available)
-        {
-            if(message.author.id == message.channel.guild.ownerID)
-            {
+    if(checkMsg == '!reloadimages') {
+        if(message.channel.guild.available) {
+            // if(message.author.id == message.channel.guild.ownerID) {
+            if(message.author.id == botSettings.botOwnerID) {
                 message.channel.send('Reloading images.');
                 reloadImages();
                 message.channel.send('Images reloaded.');
             }
+            else {
+                console.log(`Reload images command came from non-owner (${message.author.username} (${message.author.id})) ignoring.`);
+            }
         }
     }
+    // if(checkMsg == '!test') {
+    //     if(message.author.id == botSettings.botOwnerID) {
+    //         console.log(message);
+    //     }
+    //     else { 
+    //         console.log(`Test command came from non-owner, ignoring.`);
+    //     }
+    // }
+}
+
+client.on('message', message => {
+    if(message.author.bot){ return; }
+    processCommand(message);
 });
 
 client.login(botSettings.token);
