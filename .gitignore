@@ -4,3 +4,4 @@
 *.webm
 *.mp4
 botSettings.json
+node_modules\
