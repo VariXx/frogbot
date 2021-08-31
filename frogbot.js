@@ -4,7 +4,7 @@ const client = new Discord.Client();
 const { loadImages } = require('./utils/loadImages');
 const { getGuildSetting } = require('./utils/getGuildSettings');
 const { setGuildSetting } = require('./utils/setGuildSetting');
-// https://discordapp.com/oauth2/authorize?client_id=697816077547339797&scope=bot&permissions=378944 
+// https://discordapp.com/oauth2/authorize?client_id=<clientid>&scope=bot&permissions=378944 
 
 var frogs = [];
 var spideys = [];
