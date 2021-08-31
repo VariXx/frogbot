@@ -2,6 +2,12 @@
     "clientID":"",
     "clientSecret":"",
     "token":"",
-    "frogsDir":"frogs/",
-    "spideysDir":"spideys/"
+    "frogsDir":"d:\\frogbot\\frogs\\",
+    "spideysDir":"d:\\frogbot\\spideys\\"
+    "alexJonesDir":"d:\\frogbot\\alexjones\\",
+    "pepo":true,
+    "spidey":false,
+    "jones":true,
+    "activity":"!frog",
+    "botOwnerID": "90685378914193408"
 }
