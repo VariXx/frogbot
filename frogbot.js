@@ -8,6 +8,8 @@ var frogs = [];
 var spideys = [];
 var alexJones = [];
 
+var enabledChannels = []; 
+
 function reloadImages() {
     frogs = loadImages(botSettings.frogsDir);
     spideys = loadImages(botSettings.spideysDir);
@@ -22,14 +24,18 @@ client.once('ready', () => {
 	console.log(`${client.user.username} logged in.`);
 });
 
-function processCommand(message) {
+async function processCommand(message) {
     let checkMsg = message.content.split(" ");
     let command = checkMsg[0].toLowerCase();
     if(command == '!frog' || command == '!pepe' || command == '!frog' || command == '!pepo'){
         if(!botSettings.pepo) { 
             console.log(`Frogs disabled.`);
             return;
-        }        
+        }
+        if(!enabledChannels.includes(message.channel)) {
+            console.log(`Channel ${message.channel} not in enabled channels list`);
+            return;
+        }
         if(frogs.length < 1){
             console.log('No frogs loaded.');
             return;
@@ -50,6 +56,10 @@ function processCommand(message) {
             console.log(`Spideys disabled.`);
             return;
         }
+        if(!enabledChannels.includes(message.channel)) {
+            console.log(`Channel ${message.channel} not in enabled channels list`);
+            return;
+        }        
         if(spideys.length < 1) {
             console.log('No spideys loaded.');
             return;
@@ -68,6 +78,10 @@ function processCommand(message) {
     if(command == '!alexjones' || command == '!jones' || command == '!globalist') {
         if(!botSettings.jones) { 
             console.log(`Alex Jones disabled.`);
+            return;
+        }
+        if(!enabledChannels.includes(message.channel)) {
+            console.log(`Channel ${message.channel} not in enabled channels list`);
             return;
         }        
         if(alexJones.length < 1){
@@ -123,6 +137,50 @@ function processCommand(message) {
         }
         else { 
             console.log(`Test command came from non-owner, ignoring.`);
+        }
+    }
+    // the settings command
+    if(command == '!frogbot'){
+        if(message.author.id == botSettings.botOwnerID || message.author.id == message.channel.guild.ownerID) {
+            if(checkMsg[1] !== undefined && checkMsg[1].toLowerCase() == 'channel') {
+                if(checkMsg[2] !== undefined && checkMsg[2].toLowerCase() == 'add') {
+                    if(checkMsg[3] !== undefined) {
+                        let findChan = checkMsg[3].slice(2,-1);
+                        try {
+                            let foundChan = await client.channels.fetch(findChan);
+                            enabledChannels.push(foundChan);
+                            console.log(`Added ${foundChan} to enabled channels`);
+                            message.channel.send(`Added channel to enabled list`);                            
+                        }
+                        catch(error) {
+                            message.channel.send(`Error adding channel`);
+                            console.log(error);
+                        }
+                    }
+                    else {
+                        message.channel.send(`Couldn't read channel name. (Format: !frogbot channel add #channel)`);
+                    }
+                }
+                else if(checkMsg[2] !== undefined && checkMsg[2].toLowerCase() == 'remove') {
+                    console.log(enabledChannels);
+                    if(enabledChannels.includes(message.channel)) {
+                        for(let c = 0; c < enabledChannels.length; c++) {
+                            let findChan = checkMsg[3].slice(2,-1);
+                            if(enabledChannels[c] == findChan) {
+                                enabledChannels.splice(c,1);
+                                console.log(`Removed ${findChan} from array`);
+                                message.channel.send(`Removed channel from enabled list`);
+                            }
+                        }
+                    }
+                    else {
+                        message.channel.send(`Channel is not in enabled list`);
+                    }
+                }
+            }
+            else {
+                message.channel.send(`Unknown command`);
+            }
         }
     }
 }
