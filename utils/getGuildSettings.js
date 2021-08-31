@@ -10,20 +10,20 @@ async function getAllGuildSettings(guildSettingsFilename) {
         try {
             const settingsFile = await readFile(guildSettingsFilePath);
             guildSettings = JSON.parse(settingsFile);
-            guildSettings.successful = true;
+            // guildSettings.successful = true;
             // console.log(guildSettings);
         }
         catch(error) {
             console.log(error);
-            guildSettings.error = error;
-            guildSettings.successful = false;
+            // guildSettings.error = error;
+            // guildSettings.successful = false;
         }
     }
     else {
         let errorMsg = `Could not load file: ${guildSettingsFilePath}`;
         console.error(errorMsg);
-        guildSettings.error = errorMsg;
-        guildSettings.successful = false;
+        // guildSettings.error = errorMsg;
+        // guildSettings.successful = false;
     }
     return guildSettings;
 }
@@ -36,7 +36,6 @@ async function getGuildSetting(guildSettingsFilename, setting) {
         try {
             const settingsFile = await readFile(guildSettingsFilePath);
             guildSettings = JSON.parse(settingsFile);
-            guildSettings.successful = true;
             if(guildSettings.hasOwnProperty(setting)) {
                 return guildSettings[setting];
             }
@@ -54,11 +53,9 @@ async function getGuildSetting(guildSettingsFilename, setting) {
     else {
         let errorMsg = `Could not load file: ${guildSettingsFilePath}`;
         console.error(errorMsg);
-        guildSettings.error = errorMsg;
-        guildSettings.successful = false;
         return undefined;
     }
 }
 
-module.exports.getGuildSettings = getAllGuildSettings;
+module.exports.getAllGuildSettings = getAllGuildSettings;
 module.exports.getGuildSetting = getGuildSetting;

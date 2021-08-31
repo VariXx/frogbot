@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const { loadImages } = require('./utils/loadImages');
 const { getGuildSetting } = require('./utils/getGuildSettings');
-const { setGuildSettings } = require('./utils/setGuildSettings');
+const { setGuildSetting } = require('./utils/setGuildSetting');
 // https://discordapp.com/oauth2/authorize?client_id=697816077547339797&scope=bot&permissions=378944 
 
 var frogs = [];
@@ -26,6 +26,29 @@ client.once('ready', () => {
 	console.log(`${client.user.username} logged in.`);
 });
 
+async function isChannelEnabled(guildId, checkChannel) {
+    let channelEnabled = false;
+    try {
+        let foundChanId = await client.channels.resolveID(checkChannel);
+        console.log(foundChanId);
+        try {
+            let enabledChannels = await getGuildSetting(guildId, 'channels');
+            if(enabledChannels !== undefined) {
+                if(enabledChannels.includes(foundChanId)) {
+                    channelEnabled = true;
+                }
+            }   
+        }
+        catch(error) {
+            console.log(`Error loading channels: ${error}`);
+        }
+    }
+    catch(error) {
+        console.log(error);
+    }
+    return channelEnabled;
+}
+
 async function processCommand(message) {
     let checkMsg = message.content.split(" ");
     let command = checkMsg[0].toLowerCase();
@@ -34,7 +57,8 @@ async function processCommand(message) {
             console.log(`Frogs disabled.`);
             return;
         }
-        if(!enabledChannels.includes(message.channel)) {
+        let checkChannel = await isChannelEnabled(message.guild.id, message.channel);
+        if(!checkChannel) {
             console.log(`Channel ${message.channel} not in enabled channels list`);
             return;
         }
@@ -58,10 +82,11 @@ async function processCommand(message) {
             console.log(`Spideys disabled.`);
             return;
         }
-        if(!enabledChannels.includes(message.channel)) {
+        let checkChannel = await isChannelEnabled(message.guild.id, message.channel);
+        if(!checkChannel) {
             console.log(`Channel ${message.channel} not in enabled channels list`);
             return;
-        }        
+        }
         if(spideys.length < 1) {
             console.log('No spideys loaded.');
             return;
@@ -82,10 +107,11 @@ async function processCommand(message) {
             console.log(`Alex Jones disabled.`);
             return;
         }
-        if(!enabledChannels.includes(message.channel)) {
+        let checkChannel = await isChannelEnabled(message.guild.id, message.channel);
+        if(!checkChannel) {
             console.log(`Channel ${message.channel} not in enabled channels list`);
             return;
-        }        
+        }
         if(alexJones.length < 1){
             console.log('No alexJones loaded.');
             return;
@@ -147,7 +173,7 @@ async function processCommand(message) {
         console.log(checkSetting);
     }   
     if(command == '!setcheck') {
-        setGuildSettings(message.guild.id, 'check', true);
+        setGuildSetting(message.guild.id, 'check', true);
         console.log(`enabled check`);
     }
     // the settings command
@@ -159,9 +185,33 @@ async function processCommand(message) {
                         let findChan = checkMsg[3].slice(2,-1);
                         try {
                             let foundChan = await client.channels.fetch(findChan);
-                            enabledChannels.push(foundChan);
-                            console.log(`Added ${foundChan} to enabled channels`);
-                            message.channel.send(`Added channel to enabled list`);                            
+                            let foundChanId = await client.channels.resolveID(foundChan);
+                            console.log(foundChanId);
+                            let oldChans = undefined;
+                            try {
+                                oldChans = await getGuildSetting(message.guild.id, 'channels');
+                            }
+                            catch(error) {
+                                console.log(`Error loading channels: ${error}`);
+                            }
+                            let newChans = [];
+                            if(oldChans !== undefined) {
+                                if(oldChans.includes(foundChanId)) {
+                                    message.channel.send(`Channel is already in list.`);
+                                    return;
+                                }
+                                else {
+                                    oldChans.push(foundChanId);
+                                    newChans = oldChans;
+                                }
+                            }
+                            else {
+                                newChans.push(foundChanId);
+                            }
+                            await setGuildSetting(message.guild.id, 'channels', newChans);
+                            // enabledChannels.push(foundChan);
+                            console.log(`Added ${foundChanId} to enabled channels`);
+                            message.channel.send(`Added channel to list`);                            
                         }
                         catch(error) {
                             message.channel.send(`Error adding channel`);
@@ -173,19 +223,47 @@ async function processCommand(message) {
                     }
                 }
                 else if(checkMsg[2] !== undefined && checkMsg[2].toLowerCase() == 'remove') {
-                    console.log(enabledChannels);
-                    if(enabledChannels.includes(message.channel)) {
-                        for(let c = 0; c < enabledChannels.length; c++) {
-                            let findChan = checkMsg[3].slice(2,-1);
-                            if(enabledChannels[c] == findChan) {
-                                enabledChannels.splice(c,1);
-                                console.log(`Removed ${findChan} from array`);
-                                message.channel.send(`Removed channel from enabled list`);
+                    let channels = await getGuildSetting(message.guild.id, 'channels'); 
+                    if(channels !== undefined) {
+                        let findChan = checkMsg[3].slice(2,-1);
+                        try {
+                            let foundChan = await client.channels.fetch(findChan);
+                            let foundChanId = await client.channels.resolveID(foundChan);                            
+                            console.log(`Found chan:\n${foundChan}\nchannels:\n${channels}`);
+                            let newChans = [];
+                            let oldChans = undefined;
+                            try {
+                                oldChans = await getGuildSetting(message.guild.id, 'channels');
                             }
+                            catch(error) {
+                                console.log(`Error loading channels: ${error}`);
+                            }
+                            if(oldChans !== undefined) {
+                                if(oldChans.includes(foundChanId)) { 
+                                    for(let chan = 0; chan < oldChans.length; chan++) {
+                                        if(oldChans[chan] == foundChanId) {
+                                            // console.log(`Found ${oldChans[chan]}`);
+                                            // console.log(foundChan);
+                                            console.log(`Removing ${oldChans[chan]} from list`);
+                                            oldChans.splice(chan,1);
+                                            message.channel.send(`Removed channel from list`);
+                                        }
+                                    }
+                                    newChans = oldChans;
+                                    setGuildSetting(message.guild.id, 'channels', newChans);                                    
+                                }
+                                else {
+                                    console.log(`Channel not in list`);
+                                    message.channel.send(`Channel not in list`);
+                                }
+                            }
+                        }
+                        catch(error) {
+                            console.log(`Error checking for channel: ${error}`);
                         }
                     }
                     else {
-                        message.channel.send(`Channel is not in enabled list`);
+                        console.log(`Guild settings file doesn't exist. No channels to look for.`);
                     }
                 }
             }

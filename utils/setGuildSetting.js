@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { getGuildSettings, getAllGuildSettings } = require('./getGuildSettings');
+const { getAllGuildSettings } = require('./getGuildSettings');
 const guildsSettingsDir = require('../botSettings.json').guildSettingsDir
 
 function checkConfigDir(configDir) {
@@ -8,7 +8,7 @@ function checkConfigDir(configDir) {
     }
 }
 
-async function setGuildSettings(guildSettingsFilename, setting, newValue) {
+async function setGuildSetting(guildSettingsFilename, setting, newValue) {
     let newSettings = {}; 
     let guildSettingsFilePath = `${guildsSettingsDir}${guildSettingsFilename}.frogbot`;
     // check if settings dir exists
@@ -25,7 +25,7 @@ async function setGuildSettings(guildSettingsFilename, setting, newValue) {
     
     if(fs.existsSync(guildSettingsFilePath)) {
         let foundSetting = false;
-        const oldSettings = await getAllGuildSettings(guildSettingsFilePath);
+        const oldSettings = await getAllGuildSettings(guildSettingsFilename);
         for(let key in oldSettings) {
             if(key == setting) { 
                 newSettings[key] = newValue;
@@ -52,4 +52,4 @@ async function setGuildSettings(guildSettingsFilename, setting, newValue) {
     }
 }
 
-module.exports.setGuildSettings = setGuildSettings;
+module.exports.setGuildSetting = setGuildSetting;
