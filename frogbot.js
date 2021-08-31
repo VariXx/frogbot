@@ -2,6 +2,8 @@ const botSettings = require('./botSettings.json');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const { loadImages } = require('./utils/loadImages');
+const { getGuildSetting } = require('./utils/getGuildSettings');
+const { setGuildSettings } = require('./utils/setGuildSettings');
 // https://discordapp.com/oauth2/authorize?client_id=697816077547339797&scope=bot&permissions=378944 
 
 var frogs = [];
@@ -139,6 +141,15 @@ async function processCommand(message) {
             console.log(`Test command came from non-owner, ignoring.`);
         }
     }
+    if(command == '!check') {
+        console.log(message.guild.id);
+        let checkSetting = await getGuildSetting(message.guild.id, 'check');
+        console.log(checkSetting);
+    }   
+    if(command == '!setcheck') {
+        setGuildSettings(message.guild.id, 'check', true);
+        console.log(`enabled check`);
+    }
     // the settings command
     if(command == '!frogbot'){
         if(message.author.id == botSettings.botOwnerID || message.author.id == message.channel.guild.ownerID) {
@@ -188,6 +199,10 @@ async function processCommand(message) {
 client.on('message', message => {
     if(message.author.bot){ return; }
     processCommand(message);
+});
+
+client.on('guildCreate', guild => {
+    console.log(guild);
 });
 
 client.login(botSettings.token);
