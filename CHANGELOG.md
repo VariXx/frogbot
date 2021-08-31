@@ -17,7 +17,7 @@ _No unreleased changes_
 - Changed loading images to single function 
 - Changed activity text to load from bot settings
 - Changed reload images command to bot owner only 
-- Changed image commands to only run when enabled which can be set per guild 
+- Changed image commands to only run when enabled
 - Changed command processing function to work with spaces
 
 ## [1.0.0] - 2020-04-18
