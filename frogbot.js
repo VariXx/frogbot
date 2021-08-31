@@ -23,8 +23,9 @@ client.once('ready', () => {
 });
 
 function processCommand(message) {
-    let checkMsg = message.content.toLowerCase();
-    if(checkMsg == '!frog' || checkMsg == '!pepe' || checkMsg == '!frog' || checkMsg == '!pepo'){
+    let checkMsg = message.content.split(" ");
+    let command = checkMsg[0].toLowerCase();
+    if(command == '!frog' || command == '!pepe' || command == '!frog' || command == '!pepo'){
         if(!botSettings.pepo) { 
             console.log(`Frogs disabled.`);
             return;
@@ -44,7 +45,7 @@ function processCommand(message) {
             .then(console.log('Frog delivered'))
             .catch(console.error);
     }
-    if(checkMsg == '!spidey' || checkMsg == '!spiderman' || checkMsg == 'i need pictures of spiderman!') {
+    if(command == '!spidey' || command == '!spiderman') {
         if(!botSettings.spidey) { 
             console.log(`Spideys disabled.`);
             return;
@@ -64,7 +65,7 @@ function processCommand(message) {
             .then(console.log('Spidey delivered'))
             .catch(console.error);
     }
-    if(checkMsg == '!alexjones' || checkMsg == '!jones' || checkMsg == '!globalist') {
+    if(command == '!alexjones' || command == '!jones' || command == '!globalist') {
         if(!botSettings.jones) { 
             console.log(`Alex Jones disabled.`);
             return;
@@ -84,10 +85,10 @@ function processCommand(message) {
             .then(console.log('Alex Jones delivered'))
             .catch(console.error);
     }
-    if(checkMsg == '!froghelp' || checkMsg == '!help') {
+    if(command == '!froghelp' || command == '!help') {
         message.channel.send(`!frog sends a frog. !spidey sends a spidey. !froghelp displays this message`);
     }
-    if(checkMsg == '!reloadimages') {
+    if(command == '!reloadimages') {
         if(message.channel.guild.available) {
             // if(message.author.id == message.channel.guild.ownerID) {
             if(message.author.id == botSettings.botOwnerID) {
@@ -100,14 +101,30 @@ function processCommand(message) {
             }
         }
     }
-    // if(checkMsg == '!test') {
-    //     if(message.author.id == botSettings.botOwnerID) {
-    //         console.log(message);
-    //     }
-    //     else { 
-    //         console.log(`Test command came from non-owner, ignoring.`);
-    //     }
-    // }
+    if(command == '!frogstatus') {
+        if(message.channel.guild.available) {
+            if(message.author.id == botSettings.botOwnerID) {
+                let activityString = '';
+                for(let m = 1; m < checkMsg.length; m++) {
+                    activityString += `${checkMsg[m]} `;
+                }
+                if(activityString.length > 1) {
+                    client.user.setActivity(activityString, {type: 'PLAYING'});
+                }
+            }
+        }
+        else { 
+            console.log(`Status command came from non-owner, ignoring.`);
+        }        
+    }
+    if(command == '!test') {
+        if(message.author.id == botSettings.botOwnerID) {
+            console.log(message);
+        }
+        else { 
+            console.log(`Test command came from non-owner, ignoring.`);
+        }
+    }
 }
 
 client.on('message', message => {
