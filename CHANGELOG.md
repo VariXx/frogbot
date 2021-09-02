@@ -19,6 +19,7 @@ _No unreleased changes_
 - Changed reload images command to bot owner only 
 - Changed image commands to only run when enabled
 - Changed command processing function to work with spaces
+- Updated discord.js to 12.5.3 
 
 ## [1.0.0] - 2020-04-18
 ### Initial Release
