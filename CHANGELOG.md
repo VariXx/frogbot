@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 _No unreleased changes_
 
-## [1.1.0] - 2021-08-30
+## [1.1.0] - 2021-09-01
 ### Added
 - Added per guild setting files 
 - Added command to add/remove channels the bot will reply in 
