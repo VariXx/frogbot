@@ -5,4 +5,5 @@
 *.mp4
 .vscode/
 node_modules/
+guildSettings/
 botSettings.json
