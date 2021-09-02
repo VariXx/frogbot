@@ -132,7 +132,6 @@ async function processCommand(message) {
     }
     if(command == '!reloadimages') {
         if(message.channel.guild.available) {
-            // if(message.author.id == message.channel.guild.ownerID) {
             if(message.author.id == botSettings.botOwnerID) {
                 message.channel.send('Reloading images.');
                 reloadImages();
@@ -209,7 +208,6 @@ async function processCommand(message) {
                                 newChans.push(foundChanId);
                             }
                             await setGuildSetting(message.guild.id, 'channels', newChans);
-                            // enabledChannels.push(foundChan);
                             console.log(`Added ${foundChanId} to enabled channels`);
                             message.channel.send(`Added channel to list`);                            
                         }
@@ -242,8 +240,6 @@ async function processCommand(message) {
                                 if(oldChans.includes(foundChanId)) { 
                                     for(let chan = 0; chan < oldChans.length; chan++) {
                                         if(oldChans[chan] == foundChanId) {
-                                            // console.log(`Found ${oldChans[chan]}`);
-                                            // console.log(foundChan);
                                             console.log(`Removing ${oldChans[chan]} from list`);
                                             oldChans.splice(chan,1);
                                             message.channel.send(`Removed channel from list`);
