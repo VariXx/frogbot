@@ -1,10 +1,13 @@
 const botSettings = require('./botSettings.json');
-const Discord = require('discord.js');
-const client = new Discord.Client();
+// const Discord = require('discord.js');
+// const client = new Discord.Client();
+const { Client, Intents, Message, CommandInteractionOptionResolver } = require('discord.js');
 const { loadImages } = require('./utils/loadImages');
 const { getGuildSetting } = require('./utils/getGuildSettings');
 const { setGuildSetting } = require('./utils/setGuildSetting');
 // https://discordapp.com/oauth2/authorize?client_id=<clientid>&scope=bot&permissions=378944 
+
+const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
 
 var frogs = [];
 var spideys = [];
@@ -29,7 +32,7 @@ client.once('ready', () => {
 async function isChannelEnabled(guildId, checkChannel) {
     let channelEnabled = false;
     try {
-        let foundChanId = await client.channels.resolveID(checkChannel);
+        let foundChanId = await client.channels.resolveId(checkChannel);
         console.log(foundChanId);
         try {
             let enabledChannels = await getGuildSetting(guildId, 'channels');
@@ -51,8 +54,21 @@ async function isChannelEnabled(guildId, checkChannel) {
 
 async function processCommand(message) {
     let checkMsg = message.content.split(" ");
-    let command = checkMsg[0].toLowerCase();
-    if(command == '!frog' || command == '!pepe' || command == '!frog' || command == '!pepo'){
+    let command = ``;
+    if(checkMsg[0].includes(client.user.id)) {
+        checkMsg.shift(); // remove first element (bot mention)
+    }
+    if(checkMsg[0] !== undefined) {
+        command = checkMsg[0].toLowerCase();
+    }
+    else {
+        console.log(`Empty command`);
+        return;
+    }
+    if(checkMsg[0].startsWith(botSettings.commandPrefix)) {        
+        command = command.substring(1); // remove ! from command 
+    }
+    if(command == 'frog' || command == 'pepe' || command == 'frog' || command == 'pepo'){
         if(!botSettings.pepo) { 
             console.log(`Frogs disabled.`);
             return;
@@ -77,7 +93,7 @@ async function processCommand(message) {
             .then(console.log('Frog delivered'))
             .catch(console.error);
     }
-    if(command == '!spidey' || command == '!spiderman') {
+    if(command == 'spidey' || command == 'spiderman') {
         if(!botSettings.spidey) { 
             console.log(`Spideys disabled.`);
             return;
@@ -102,7 +118,7 @@ async function processCommand(message) {
             .then(console.log('Spidey delivered'))
             .catch(console.error);
     }
-    if(command == '!alexjones' || command == '!jones' || command == '!globalist') {
+    if(command == 'alexjones' || command == 'jones' || command == 'globalist') {
         if(!botSettings.jones) { 
             console.log(`Alex Jones disabled.`);
             return;
@@ -127,10 +143,10 @@ async function processCommand(message) {
             .then(console.log('Alex Jones delivered'))
             .catch(console.error);
     }
-    if(command == '!froghelp' || command == '!help') {
+    if(command == 'froghelp' || command == 'help') {
         message.channel.send(`!frog sends a frog. !spidey sends a spidey. !froghelp displays this message`);
     }
-    if(command == '!reloadimages') {
+    if(command == 'reloadimages') {
         if(message.channel.guild.available) {
             if(message.author.id == botSettings.botOwnerID) {
                 message.channel.send('Reloading images.');
@@ -142,7 +158,7 @@ async function processCommand(message) {
             }
         }
     }
-    if(command == '!frogstatus') {
+    if(command == 'frogstatus') {
         if(message.channel.guild.available) {
             if(message.author.id == botSettings.botOwnerID) {
                 let activityString = '';
@@ -158,7 +174,7 @@ async function processCommand(message) {
             console.log(`Status command came from non-owner, ignoring.`);
         }        
     }
-    if(command == '!test') {
+    if(command == 'test') {
         if(message.author.id == botSettings.botOwnerID) {
             console.log(message);
         }
@@ -166,17 +182,17 @@ async function processCommand(message) {
             console.log(`Test command came from non-owner, ignoring.`);
         }
     }
-    if(command == '!check') {
+    if(command == 'check') {
         console.log(message.guild.id);
         let checkSetting = await getGuildSetting(message.guild.id, 'check');
         console.log(checkSetting);
     }   
-    if(command == '!setcheck') {
+    if(command == 'setcheck') {
         setGuildSetting(message.guild.id, 'check', true);
         console.log(`enabled check`);
     }
     // the settings command
-    if(command == '!frogbot'){
+    if(command == 'frogbot'){
         if(message.author.id == botSettings.botOwnerID || message.author.id == message.channel.guild.ownerID) {
             if(checkMsg[1] !== undefined && checkMsg[1].toLowerCase() == 'channel') {
                 if(checkMsg[2] !== undefined && checkMsg[2].toLowerCase() == 'add') {
@@ -184,7 +200,7 @@ async function processCommand(message) {
                         let findChan = checkMsg[3].slice(2,-1);
                         try {
                             let foundChan = await client.channels.fetch(findChan);
-                            let foundChanId = await client.channels.resolveID(foundChan);
+                            let foundChanId = await client.channels.resolveId(foundChan);
                             console.log(foundChanId);
                             let oldChans = undefined;
                             try {
@@ -226,7 +242,7 @@ async function processCommand(message) {
                         let findChan = checkMsg[3].slice(2,-1);
                         try {
                             let foundChan = await client.channels.fetch(findChan);
-                            let foundChanId = await client.channels.resolveID(foundChan);                            
+                            let foundChanId = await client.channels.resolveId(foundChan);                            
                             console.log(`Found chan:\n${foundChan}\nchannels:\n${channels}`);
                             let newChans = [];
                             let oldChans = undefined;
@@ -270,9 +286,18 @@ async function processCommand(message) {
     }
 }
 
-client.on('message', message => {
-    if(message.author.bot){ return; }
-    processCommand(message);
+// client.on('message', message => {
+//     if(message.author.bot){ return; }
+//     processCommand(message);
+// });
+
+client.on('messageCreate', msg => {
+    // if(message.author.bot){ return; }
+    if(msg.author == client.user) { return; }
+    // processCommand(msg);
+    if(msg.mentions.users.hasAny(client.user.id) || msg.content.startsWith(botSettings.commandPrefix)){ // handle bot mentions
+        processCommand(msg);
+    }
 });
 
 client.on('guildCreate', guild => {

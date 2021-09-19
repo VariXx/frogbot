@@ -17,7 +17,7 @@ frogbot is a Discord bot that can send images of pepos in chat
 - TO DO - usage
 
 ## Support
-[Discord server](https://discord.gg/QNppY7T) or DM `VariXx#8317`
+[Discord server](https://discord.gg/BGjwreU75R) or DM `VariXx#8317`
 
 ## License
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)

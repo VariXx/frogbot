@@ -10,5 +10,6 @@
     "spidey":false,
     "jones":true,
     "activity":"!frog",
-    "botOwnerID": "90685378914193408"
+    "botOwnerID": "90685378914193408",
+    "commandPrefix": "!"
 }
