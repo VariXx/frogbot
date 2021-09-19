@@ -1,13 +1,11 @@
 const botSettings = require('./botSettings.json');
-// const Discord = require('discord.js');
-// const client = new Discord.Client();
 const { Client, Intents, Message, CommandInteractionOptionResolver } = require('discord.js');
 const { loadImages } = require('./utils/loadImages');
 const { getGuildSetting } = require('./utils/getGuildSettings');
 const { setGuildSetting } = require('./utils/setGuildSetting');
 // https://discordapp.com/oauth2/authorize?client_id=<clientid>&scope=bot&permissions=378944 
 
-const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
+const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 var frogs = [];
 var spideys = [];

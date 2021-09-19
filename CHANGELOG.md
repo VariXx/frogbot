@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 _No unreleased changes_
 
+## [1.2.1] - 2021-09-18
+### Removed
+- Removed Intents.FLAGS.GUILD_PRESENCES
+
 ## [1.2.0] - 2021-09-18
 ### Added
 - Added handling mentions as commands
@@ -31,7 +35,8 @@ _No unreleased changes_
 ## [1.0.0] - 2020-04-18
 ### Initial Release
 
-[1.2.0]: https://github.com/VariXx/frogbot/tree/v1.1.0
+[1.2.0]: https://github.com/VariXx/frogbot/tree/v1.2.1
+[1.2.0]: https://github.com/VariXx/frogbot/tree/v1.2.0
 [1.1.0]: https://github.com/VariXx/frogbot/tree/v1.1.0
 [1.0.0]: https://github.com/VariXx/frogbot/tree/v1.0.0
 [Unreleased]: https://github.com/VariXx/frogbot/compare/master...develop
