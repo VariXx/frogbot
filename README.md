@@ -7,7 +7,7 @@ frogbot is a Discord bot that can send images of pepos in chat
 
 ## Installation
 - Extract the latest [release](https://github.com/VariXx/frogbot/releases) into a folder
-- Install [node](https://nodejs.org/en/)
+- Install [node](https://nodejs.org/en/) (tested with v16.9.1)
 - Install requirements with `npm install`
 - Copy `botSettings.json.example` to `botSettings.json` in the bot root folder and add any missing settings. (See [Discord's developer docs](https://discord.com/developers/docs/topics/oauth2) for information on registering an app and generating a token. 
 - Add images to the directories set in the bot settings. Use the full path to the directory. 
