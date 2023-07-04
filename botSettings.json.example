@@ -1,14 +1,14 @@
 {
-    "clientID":"",
-    "clientSecret":"",
+    "clientId":"",
     "token":"",
     "frogsDir":"d:\\frogbot\\frogs\\",
-    "spideysDir":"d:\\frogbot\\spideys\\",
-    "alexJonesDir":"d:\\frogbot\\alexjones\\",
+    "spideyDir":"d:\\frogbot\\spideys\\",
+    "jonesDir":"d:\\frogbot\\alexjones\\",
     "guildSettingsDir":"d:\\frogbot\\guildSettings\\",    
     "pepo":true,
-    "spidey":false,
-    "jones":true,
-    "activity":"!frog",
-    "botOwnerID": "90685378914193408"
+    "spidey":true,
+    "jones":false,
+    "activity":"for frogs",
+    "botOwnerID": "90685378914193408",
+    "testGuildId": "281540649348759553"
 }
