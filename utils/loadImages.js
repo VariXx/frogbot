@@ -1,27 +1,22 @@
 const fs = require('fs');
+const botSettings = require('../botSettings.json');
 
-function loadImages(readDir)
-{
+async function loadImages(imgDir) {
     let images = [];
     try {
-        fs.readdir(readDir, (error, files) => {
-            console.log('Loading images...');
-            if(error){
-                console.log(`Error loading directory ${readDir}\n${error}`);
+        console.log('Loading images');
+        const fileNames = await fs.promises.readdir(imgDir);
+        for (let file of fileNames) {
+            if(file.includes('.jpg') || file.includes('.png') || file.includes('.gif')) { 
+                images.push(file); 
             }
-            else {
-                files.forEach(file => {
-                    if(file.includes('.jpg') || file.includes('.png') || file.includes('.gif')) {
-                        images.push(file);
-                    }
-
-                });
-            }
-            console.log(`Loaded ${images.length} images from ${readDir}`);
-        });
+        }
+        console.log(`Loaded ${images.length} images from ${imgDir}`);
         return images;
     }
-    catch(error) { console.log(error) };
+    catch(error) {
+        console.log(`Error loading images. ${error}`);
+    }
 }
 
 module.exports.loadImages = loadImages;
