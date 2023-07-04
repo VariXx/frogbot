@@ -13,9 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://varixx@bitbucket.org/varixx/frogbot.git"
+    "url": "git+https://github.com/aosterwyk/frogbot.git"
   },
-  "author": "",
+  "author": "Aaron Osterwyk",
   "license": "Apache-2.0",
-  "homepage": "https://bitbucket.org/varixx/frogbot#readme"
+  "bugs": {
+    "url": "https://github.com/aosterwyk/varibot-twitch-js/issues"
+  },
+  "homepage": "https://github.com/aosterwyk/varibot-twitch-js#readme"
 }
