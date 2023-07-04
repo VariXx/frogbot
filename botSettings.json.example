@@ -3,7 +3,7 @@
     "clientSecret":"",
     "token":"",
     "frogsDir":"d:\\frogbot\\frogs\\",
-    "spideysDir":"d:\\frogbot\\spideys\\"
+    "spideysDir":"d:\\frogbot\\spideys\\",
     "alexJonesDir":"d:\\frogbot\\alexjones\\",
     "guildSettingsDir":"d:\\frogbot\\guildSettings\\",    
     "pepo":true,
