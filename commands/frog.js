@@ -9,12 +9,12 @@ module.exports = {
 	async execute(interaction) {
 		const frogs = await loadImages(botSettings.frogsDir);
 		if(!botSettings.pepo) { 
-			await interaction.reply('pepos disabled');
+			await interaction.reply({ content: 'pepos disabled', ephemeral: true });
 			console.log('pepos disabled');
 			return;
 		}
 		if(frogs.length < 1) { 
-			await interaction.reply('No pepos loaded');			
+			await interaction.reply({ content: 'no pepos loaded', ephemeral: true });
 			console.log('No pepos loaded'); 
 			return;
 		}
