@@ -36,12 +36,8 @@ async function getGuildSetting(guildSettingsFilename, setting) {
         try {
             const settingsFile = await readFile(guildSettingsFilePath);
             guildSettings = JSON.parse(settingsFile);
-            if(guildSettings.hasOwnProperty(setting)) {
-                return guildSettings[setting];
-            }
-            else {
-                return undefined;
-            }
+            if(guildSettings.hasOwnProperty(setting)) { return guildSettings[setting]; }
+            else { return undefined; }
         }
         catch(error) {
             console.log(error);
