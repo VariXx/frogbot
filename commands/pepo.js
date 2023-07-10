@@ -5,7 +5,7 @@ const { checkCooldown, setCooldown } = require('../utils/cooldowns');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('frog')
+		.setName('pepo')
 		.setDescription('A single pepo. Certified organic and gluten-free.'),
 	async execute(interaction) {
 		const cooldown = await checkCooldown(interaction.guild.id, 'pepo');
