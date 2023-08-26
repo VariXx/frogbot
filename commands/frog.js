@@ -1,19 +1,13 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { loadImages } = require('../utils/loadImages');
 const botSettings = require('../botSettings.json');
-const { checkCooldown, setCooldown } = require('../utils/cooldowns');
 
 module.exports = {
+	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('frog')
 		.setDescription('A single pepo. Certified organic and gluten-free.'),
 	async execute(interaction) {
-		const cooldown = await checkCooldown(interaction.guild.id, 'pepo');
-		if(!cooldown) {
-			interaction.reply('Command on cooldown. Try again later.'); 
-			return false; 
-		}
-		await setCooldown(interaction.guild.id, 'pepo');		
 		const frogs = await loadImages(botSettings.frogsDir);
 		if(!botSettings.pepo) { 
 			await interaction.reply({ content: 'pepos disabled', ephemeral: true });

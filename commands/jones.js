@@ -1,19 +1,13 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { loadImages } = require('../utils/loadImages');
 const botSettings = require('../botSettings.json');
-const { checkCooldown, setCooldown } = require('../utils/cooldowns');
 
 module.exports = {
+	cooldown: 5,
 	data: new SlashCommandBuilder()
 		.setName('jones')
 		.setDescription('Defeat the globalists'),
 	async execute(interaction) {
-		const cooldown = await checkCooldown(interaction.guild.id, 'jones');
-		if(!cooldown) {
-			interaction.reply('Command on cooldown. Try again later.'); 
-			return false; 
-		}
-		await setCooldown(interaction.guild.id, 'jones');				
 		const jones = await loadImages(botSettings.jonesDir);
 		if(!botSettings.jones) { 
 			await interaction.reply({ content: 'jones disabled', ephemeral: true });
