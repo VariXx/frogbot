@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 _No unreleased changes_
 
-## [1.3.0] - 2023-08-25
+## [1.3.0] - 2023-10-21
 ### Changed
 - Updated discordjs to 14
 - Changed commands to slash commands
